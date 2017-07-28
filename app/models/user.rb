@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :todos, dependent: :destroy
+
   before_save {email.downcase!}
 
   has_secure_password
