@@ -1,9 +1,13 @@
 class Api::V1::TodosController < ApplicationController
-  before_action :load_todo, only: [:update, :destroy]
+  before_action :load_todo, only: [:update, :destroy, :show]
 
   def index
     todos = current_user.todos.newest
     render json: {data: ActiveModel::Serializer::ArraySerializer.new(todos)}, status: 200
+  end
+
+  def show
+    render json: {todo: TodoSerializer.new(@todo)}, status: 200
   end
 
   def create
@@ -17,7 +21,7 @@ class Api::V1::TodosController < ApplicationController
 
   def update
     if @todo.update todo_params
-      render json: {todo: TodoSerializer.new(todo)}, status: 202
+      render json: {todo: TodoSerializer.new(@todo)}, status: 202
     else
       render json: {errors: todo.errors}, status: 400
     end
